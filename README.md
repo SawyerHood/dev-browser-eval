@@ -17,15 +17,14 @@ This will:
 
 Run all benchmarks (3 runs each):
 ```bash
-./scripts/benchmark.sh
+bun run scripts/benchmark.ts
 ```
 
 Run a specific method:
 ```bash
-./scripts/benchmark.sh dev-browser
-./scripts/benchmark.sh playwright-skill
-./scripts/benchmark.sh playwright-mcp
-./scripts/benchmark.sh vanilla
+bun run scripts/benchmark.ts dev-browser
+bun run scripts/benchmark.ts playwright-skill
+bun run scripts/benchmark.ts playwright-mcp
 ```
 
 ## Generate Report
@@ -41,12 +40,10 @@ This generates `benchmark-comparison.md` with averaged results.
 
 | Method | Description |
 |--------|-------------|
-| `dev-browser` | Use the dev browser |
-| `playwright-skill` | Use the playwright skill |
-| `playwright-mcp` | Use playwright MCP |
-| `vanilla` | Use playwright directly |
+| `dev-browser` | Use the dev browser plugin |
+| `playwright-skill` | Use the playwright skill plugin |
+| `playwright-mcp` | Use playwright MCP server |
 
 ## Utility Scripts
 
-- `./scripts/reset-dev.sh` - Reset dev environment (kills ports, clears /tmp, resets DB)
-- `./scripts/reset-db.sh` - Reset just the database
+- `bun run scripts/reset.ts` - Reset dev environment (kills ports, clears /tmp, resets DB)
