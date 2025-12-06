@@ -1,0 +1,14 @@
+# Cloned repository
+game-tracker/
+
+# Environment files
+.env.local
+
+# Benchmark results (optional - uncomment to ignore)
+# benchmark-results/
+
+# OS files
+.DS_Store
+
+# Node modules (if any)
+node_modules/

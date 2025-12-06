@@ -1,0 +1,20 @@
+{
+  "name": "dev-browser-eval",
+  "version": "1.0.0",
+  "description": "Benchmarking suite for testing browser automation methods with Claude Code",
+  "scripts": {
+    "benchmark": "bun run scripts/benchmark.ts",
+    "generate": "bun run scripts/generate-benchmark.ts",
+    "setup": "./setup.sh",
+    "reset-dev": "./scripts/reset-dev.sh",
+    "reset-db": "./scripts/reset-db.sh"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.3.3",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0"
+  }
+}
