@@ -28,12 +28,13 @@ const TEST_CASES: Record<string, TestCase> = {
   },
 };
 
-type Method = "dev-browser" | "playwright-skill" | "playwright-mcp";
+type Method = "dev-browser" | "playwright-skill" | "playwright-mcp" | "claude-code-native-chrome";
 
 const METHODS: Record<Method, string> = {
   "dev-browser": "use the dev browser",
   "playwright-skill": "use the playwright skill",
   "playwright-mcp": "use playwright mcp",
+  "claude-code-native-chrome": "use the browser",
 };
 
 interface PluginConfig {
@@ -87,6 +88,16 @@ const METHOD_CONFIGS: Record<
         },
       },
     },
+  },
+  "claude-code-native-chrome": {
+    plugins: {
+      enabledPlugins: {
+        "dev-browser@dev-browser-marketplace": false,
+        "playwright-skill@playwright-skill": false,
+        "example-skills@anthropic-agent-skills": false,
+      },
+    },
+    mcp: { mcpServers: {} },
   },
 };
 
@@ -142,6 +153,11 @@ async function runBenchmark(
     "stream-json",
     "--verbose",
   ];
+
+  // Add --chrome flag for native chrome method
+  if (method === "claude-code-native-chrome") {
+    args.push("--chrome");
+  }
 
   // Add MCP config if method has MCP servers
   const config = METHOD_CONFIGS[method];

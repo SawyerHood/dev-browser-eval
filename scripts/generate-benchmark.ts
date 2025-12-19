@@ -13,6 +13,7 @@ interface RunData {
   time_ms: number
   cost: number
   turns: number
+  success: boolean
 }
 
 interface MethodData {
@@ -22,6 +23,7 @@ interface MethodData {
   time_ms: number // average
   cost: number // average
   turns: number // average
+  successRate: string // e.g., "100% (3/3)"
 }
 
 interface EvalData {
@@ -34,10 +36,11 @@ const METHOD_DISPLAY_NAMES: Record<string, string> = {
   'playwright-skill': 'Playwright Skill',
   'playwright-mcp': 'Playwright MCP',
   'vanilla': 'Vanilla',
+  'claude-code-native-chrome': 'Claude Code Native Chrome',
 }
 
 // Order for consistent display
-const METHOD_ORDER = ['dev-browser', 'playwright-skill', 'playwright-mcp', 'vanilla']
+const METHOD_ORDER = ['dev-browser', 'playwright-skill', 'playwright-mcp', 'vanilla', 'claude-code-native-chrome']
 
 function formatTime(ms: number): string {
   const totalSeconds = Math.round(ms / 1000)
@@ -56,6 +59,13 @@ function calcPercentDiff(a: number, b: number): number {
 
 function average(nums: number[]): number {
   return nums.reduce((a, b) => a + b, 0) / nums.length
+}
+
+function calcSuccessRate(runs: RunData[]): string {
+  const successes = runs.filter((r) => r.success).length
+  const total = runs.length
+  const pct = Math.round((successes / total) * 100)
+  return `${pct}% (${successes}/${total})`
 }
 
 function parseFilename(filename: string): { eval: string; method: string } | null {
@@ -130,13 +140,13 @@ function generateMethodTable(methods: MethodData[]): string {
 
   const fastest = methods[0] // Already sorted by time
 
-  let md = '| Method | Time | Cost (USD) | Turns |\n'
-  md += '|--------|------|------------|-------|\n'
+  let md = '| Method | Time | Cost (USD) | Turns | Success Rate |\n'
+  md += '|--------|------|------------|-------|--------------|\n'
 
   for (const m of methods) {
     const isFastest = m.name === fastest.name
     const name = isFastest ? `**${m.name}**` : m.name
-    md += `| ${name} | ${formatTime(m.time_ms)} | ${formatCost(m.cost)} | ${m.turns} |\n`
+    md += `| ${name} | ${formatTime(m.time_ms)} | ${formatCost(m.cost)} | ${m.turns} | ${m.successRate} |\n`
   }
 
   return md
@@ -187,6 +197,7 @@ async function main() {
       time_ms: data.duration_ms,
       cost: data.total_cost_usd,
       turns: data.num_turns,
+      success: true, // Manually determined
     })
   }
 
@@ -205,6 +216,7 @@ async function main() {
         time_ms: average(runs.map((r) => r.time_ms)),
         cost: average(runs.map((r) => r.cost)),
         turns: Math.round(average(runs.map((r) => r.turns))),
+        successRate: calcSuccessRate(runs),
       })
     }
 
@@ -299,6 +311,7 @@ async function main() {
         time_ms: average(runs.map((r) => r.time_ms)),
         cost: average(runs.map((r) => r.cost)),
         turns: Math.round(average(runs.map((r) => r.turns))),
+        successRate: calcSuccessRate(runs),
       })
     }
 
